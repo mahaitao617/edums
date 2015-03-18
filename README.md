@@ -83,7 +83,5 @@
 3:页面使用的是BootStrap 的框架，版本为BootStrap2
 #
 4:项目管理使用的是maven 以及svn 进行的
-
-#
 #项目组成员
 51jsoft,hcc,river,zhangxiaowei001,zhuyuwaiting,dongge,xining,wsl,976441364,zhangjk007,xufudong2012,michaelLychee,che,szy,shuang,ysq,kino,yoyiuy,123Yu,wsc1995,wch,zhouchen,xiaomeng123,yuanxin,sunrunze,architecture,sukki
