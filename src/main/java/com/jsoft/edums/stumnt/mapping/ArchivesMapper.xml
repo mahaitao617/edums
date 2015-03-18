@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsoft.edums.stumnt.mapper.ArchivesMapper">
+    <select id="listPageArchives" parameterType="Page" resultType="Archives">
+		select * from archives where isDelete=0
+	</select>
+	 <select id="getArchivesByArchivesNo" parameterType="Archives" resultType="Archives">
+		select * from archives where 1=1 and isDelete=0 and archivesNo = #{archivesNo}
+	</select>
+	<select id="getArchivesByStuName" parameterType="Archives" resultType="Archives">
+		select * from archives where 1=1 and isDelete=0 and stuName = #{stuName}
+	</select>
+	<select id="listArchivesByStuName" parameterType="Archives" resultType="Archives">
+		select * from archives where 1=1 and isDelete=0 and stuName like "%"#{stuName}"%"
+	</select>
+</mapper>

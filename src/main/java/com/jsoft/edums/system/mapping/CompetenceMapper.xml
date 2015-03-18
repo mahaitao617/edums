@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsoft.edums.system.mapper.CompetenceMapper">
+
+	<resultMap type="Competence" id="competenceResultMap">
+		<id column="competenceId" property="competenceId"/>
+		<result column="role_id" property="role_id"/>
+		<result column="menu_id" property="menu_id"/>
+	</resultMap>
+
+	<select id="getCompetenceById" resultMap="competenceResultMap" parameterType="int">
+		select * from competence where role_id=#{role_id} and isDelete = 0
+	</select>
+	
+
+</mapper>

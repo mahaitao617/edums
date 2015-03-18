@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsoft.edums.stumnt.mapper.StuinfoMapper">
+
+	<resultMap type="Stuinfo" id="stuinfoResultMap">   
+		<id column="stuInfoId" property="stuInfoId"/>
+		 <result column="archives_id" property="archives_id"/> 
+		<association property="archives"  select="selectArchivesId" column="archives_id" javaType="Archives" />
+	</resultMap>
+	<select id="selectArchivesId"  parameterType="int" resultType="Archives">
+		select * from archives where archivesId=#{archives_id} and isDelete = 0
+	</select>
+	
+	<select id="listPageStuinfo" parameterType="Page" resultMap="stuinfoResultMap">
+	    select * from stuinfo
+	</select>
+	<select id="getStuinfoByStuNo" parameterType="Stuinfo" resultMap="stuinfoResultMap">
+	    select * from stuinfo where stuNo = #{stuNo} and isDelete = 0
+	</select>
+	
+	<select id="listStuinfoByName" parameterType="String" resultMap="stuinfoResultMap">
+	    select * from stuinfo s,archives a where s.archives_id=a.archivesId and stuName=#{stuName} and s.isDelete=0 and a.isDelete=0
+	</select>
+	<select id="listStuinfoByClass" parameterType="int" resultMap="stuinfoResultMap">
+	    select * from stuinfo stu,archives arc,classes class where stu.archives_id=arc.archivesId and stu.classes=class.classesId and classesNo=#{classesNo} and stu.isDelete=0 and arc.isDelete=0 and class.isDelete=0
+	</select>
+</mapper>

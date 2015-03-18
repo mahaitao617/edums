@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsoft.edums.classmnt.mapper.ClassMapper">
+
+	<!-- 在使用字段的时候也要标明类型#{modified_date,jdbcType=TIMESTAMP}、#{date,jdbcType=DATE}。 -->
+	<!--  查询所有记录，查询多条记录即返回结果是一个集合的时候，resultType不是集合类型，而是集合所包含的类型 -->  
+	<!-- 需要分页的SQL，需要传入参数类型为Page -->
+	<select id="listPageClasses" parameterType="Page" resultMap="classResultMap">
+		select * from classes where isDelete = 0
+	</select>
+	<!-- 此处有问题 jdbcType 是不可以写为dateTime 一般我们不这样建  就只是把时间建为java.util.date 就行 -->
+	<resultMap type="Classes" id="classResultMap">
+		<id column="classesId" property="classesId" />
+		<result column="classesNo" property="classesNo"/>
+		<result column="buildTime" property="buildTime" />
+		<result column="closeTime" property="closeTime" />
+		<result column="classesType" property="classesType"/>
+		<result column="numLimit" property="numLimit"/>
+		<result column="buildPerson" property="buildPerson"/>
+		<result column="headerTea" property="headerTea"/>
+		<result column="describle" property="describle"/>
+		<result column="classState" property="classState"/>
+		<result column="isDelete" property="isDelete"/>
+	</resultMap>
+	
+	<select id="queryAll" resultMap="classResultMap">
+		select * from classes where isDelete = 0
+	</select>
+</mapper>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsoft.edums.coursemnt.mapper.CourseMapper">
+<resultMap type="CourseInfo" id="CourseResultMap">
+		<id column="courseId" property="courseId"/>
+		<result column="courseNo" property="courseNo"/>
+		<result column="courseName" property="courseName"/>
+		<result column="courseHour" property="courseHour"/>
+		<result column="describle" property="describe"/>
+		<result column="courseType" property="courseType"/>
+		<result column="courseState" property="courseState"/>
+		<result column="isDelete" property="isDelete"/>
+	</resultMap>
+	<!-- 查询所有课程 -->
+    <select id="queryCourse"  parameterType="Page"  resultMap="CourseResultMap">
+    select * from courseinfo where isDelete=0
+    </select>
+	<!-- 根据id查询课程 -->
+	<select id="queryCourseById" parameterType="int" resultMap="CourseResultMap">
+	select * from courseinfo where isDelete=0 and courseId=#{courseId}
+	</select>
+	<!-- 增加某一门课程 -->
+	<insert id="insertCourse" parameterType="CourseInfo"  useGeneratedKeys="true"  keyProperty="courseId">
+	insert into courseinfo(courseNo,courseName,courseHour,describle,courseType,courseState,isDelete) 
+	values(#{courseNo},#{courseName},#{courseHour},#{describe},#{courseType},#{courseState},0)
+	</insert>
+	<!-- 删除一门课程,根据主键id删除 -->
+	<update id="deleteCourse" parameterType="int">
+	update courseinfo  set isDelete=1 where courseId=#{courseId}
+	</update>
+	<!-- 更新一门课程 -->
+	<update id="updateCourse" parameterType="CourseInfo">
+	 update courseinfo set
+	isDelete=0
+	<if test="#{courseNo!=null}">,courseNo=#{courseNo}</if>
+	<if test="#{courseName!=null}">,courseName=#{courseName}</if>
+	<if test="#{courseHour!=0}">,courseHour=#{courseHour}</if>
+	<if test="#{describe!=null}">,describle=#{describe}</if>
+	<if test="#{courseType!=null}">,courseType=#{courseType}</if>
+	<if test="#{courseState!=null}">,courseState=#{courseState}</if>
+	where courseId=#{courseId} 
+	</update>
+	<!-- 按条件查询课程 -->
+	<select id="queryCourseByParams" parameterType="Map">
+	</select>
+	<!-- 模糊查询 -->
+	<select id="queryCourseByKeys" parameterType="java.lang.String" resultMap="CourseResultMap">
+	select * from courseinfo where isDelete=0 and (courseName like CONCAT(CONCAT('%', #{key}), '%') 
+	 or courseNo like CONCAT(CONCAT('%', #{key}), '%')
+	 or  describle like CONCAT(CONCAT('%', #{key}), '%') 
+	 or courseType like CONCAT(CONCAT('%', #{key}), '%') 
+	 or courseState like CONCAT(CONCAT('%', #{key}), '%')
+	 )
+	</select>
+</mapper>

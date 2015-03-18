@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsoft.edums.system.mapper.MenuMapper">
+
+	<resultMap type="Menu" id="menuResultMap">
+		<id column="menuId" property="menuId"/>
+		<result column="menuName" property="menuName"/>
+		<result column="fatherId" property="fatherId"/>
+		<result column="url" property="url"/>
+		<result column="buildTime" property="buildTime"/>
+		<result column="remark" property="remark"/>
+		<result column="isDelete" property="isDelete"/>
+	</resultMap>
+
+	<select id="listAllParentMenu" resultMap="menuResultMap">
+		select * from menu where fatherId is null and isDelete=0
+	</select>
+	
+	<select id="listSubMenuByParentId" parameterType="int" resultMap="menuResultMap">
+		select * from menu where fatherId=#{fatherId} and isDelete=0
+	</select>
+	
+	
+	<select id="getMenuById" parameterType="int" resultMap="menuResultMap">
+		select * from menu where menuId=#{menuId} and isDelete=0
+	</select>
+	<select id="listAllSubMenu" resultMap="menuResultMap">
+		select * from menu where fatherId is not null and isDelete=0
+	</select>
+	<select id="listPageMenu" parameterType="Page" resultMap="menuResultMap">
+		select * from menu where fatherId is null and isDelete=0
+	</select>
+	
+	
+	
+	<insert id="insertMenu" parameterType="Menu"  useGeneratedKeys="true" keyProperty="menuId">
+		insert into menu (menuName,fatherId,url,buildTime,remark,isDelete) values (#{menuName},#{fatherId},#{url},#{buildTime},#{remark},0)
+	</insert>
+	
+	<update id="updateMenu" parameterType="Menu">
+	  <if test="fatherId !=null">
+		update menu set 
+		menuName=#{menuName},
+		fatherId=#{fatherId},
+		url=#{url},
+		buildTime=#{buildTime},
+		remark=#{remark}
+		where menuId=#{menuId}
+	  </if>
+	  <if test="fatherId ==null">
+	    update menu set 
+		menuName=#{menuName},
+		buildTime=#{buildTime},
+		remark=#{remark}
+		where menuId=#{menuId}
+	  </if>
+	</update>
+	
+	<update id="deleteMenuById" parameterType="int">
+		update menu set isDelete=1 where menuId=#{menuId} or fatherId=#{menuId}
+	</update>  
+</mapper>

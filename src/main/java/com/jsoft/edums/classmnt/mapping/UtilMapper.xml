@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsoft.edums.classmnt.mapper.UtilMapper">
+
+	<!-- 在使用字段的时候也要标明类型#{modified_date,jdbcType=TIMESTAMP}、#{date,jdbcType=DATE}。 -->
+	<select id="getBuildTime" resultType="java.sql.Timestamp" parameterType="String">
+		select buildTime from archives
+		where archivesNo = 
+		(select archivesId from stuInfo where stuNo=#{stuNo} and isDelete = 0)
+	</select>
+	
+	<select id="getMaxClassNo" resultType="int">
+		select max(classesNo) from classes
+	</select>
+	
+	<select id="getMaxStuNo" parameterType="int" resultType="String">
+		select max(stuNo) from stuInfo where classes = #{classNo}
+	</select>
+</mapper>

@@ -1,0 +1,25 @@
+.toptable_style {
+	width: 100%;
+	cellspacing: 1px;
+	background-color: #353c44;
+}
+.title_style {
+	color: #e1e2e3;
+	font-size: 12px;
+}
+.centtable_style {
+	width: 100%;
+	cellspacing: 1px;
+	background-color: rgb(168, 199, 206);
+}
+.toptr {
+	background-color: rgb(211, 234, 239);
+	text-align: center;
+	font-size: 12px;
+}
+
+.centtr {
+	background-color: #FFFFFF;
+	text-align: center;
+	font-size: 12px;
+}

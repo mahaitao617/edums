@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsoft.edums.system.mapper.DictionMapper">
+
+ 	<resultMap type="Diction" id="dictionResultMap">
+		<id column="dictionId" property="dictionId"/>
+		<result column="childId" property="childId"/>
+		<result column="fatherId" property="fatherId"/>
+		<result column="dictionName" property="dictionName"/>
+		<result column="describle" property="describle"/>
+		<result column="buildTime" property="buildTime"/>
+		<result column="isDelete" property="isDelete"/>
+	</resultMap>
+	<select id="queryByFatherName" parameterType="java.lang.String" resultMap="dictionResultMap">
+		select * from diction where 
+		isDelete=0 and
+		fatherId=(select childId from diction where dictionName=#{fatherName})
+	</select> 
+
+<select id="queryById" parameterType="int" resultMap="dictionResultMap">
+		select * from diction where dictionId=#{dictionId}
+	</select> 
+
+<select id="queryByDictionName" parameterType="java.lang.String" resultMap="dictionResultMap">
+		select * from diction where 
+		isDelete=0 and
+		dictionName=#{dictionName}
+	</select> 
+	<select id="listAllParentDiction" resultMap="dictionResultMap">
+		select * from diction where fatherId is null and isDelete=0
+	</select>
+	<select id="selectMaxFatherId" resultType="java.lang.String">
+		select max(left(childId,4))+1 from diction
+	</select>
+	<select id="selectMaxChildId" resultType="java.lang.String">
+		select max(childId)+1 from diction where fatherId=#{fatherId}
+	</select>
+	
+	<insert id="insertDiciton" parameterType="Diction"  useGeneratedKeys="true" keyProperty="dictionId">
+	     <if test="fatherId !=null">
+		  insert into diction (childId,fatherId,dictionName,buildTime,describle)
+		  values (#{childId},#{fatherId},#{dictionName},#{buildTime},#{describle}) 
+		  </if>
+		  <if test="fatherId ==null">
+		  insert into diction (childId,dictionName,buildTime,describle) 
+		  values (#{childId}, #{dictionName},#{buildTime},#{describle})		
+		  </if>
+	</insert>
+	<select id="queryByDiction" parameterType="Diction" resultMap="dictionResultMap">
+		select * from diction where 
+		isDelete=0
+		<if test="dictionId!=0">
+			and dictionId=#{dictionId}
+		</if>
+		<if test="childId!=null">
+			and childId=#{childId}
+		</if>
+		<if test="fatherId!=null">
+		 and fatherId=#{fatherId}
+		</if>
+		<if test="dictionName!=null">
+		 and dictionName=${dictionName}
+		</if>
+	</select> 
+<update id="updateDiction" parameterType="Diction" >
+       
+ <if test="fatherId !=null">
+		update diction set 
+		fatherId=#{fatherId},
+		dictionName=#{dictionName},
+		describle=#{describle}, 
+		buildTime=#{buildTime}
+		where childId=#{childId}
+	  </if>
+	  <if test="fatherId ==null">
+	    update diction set 
+		dictionName=#{dictionName},
+		describle=#{describle}, 
+		buildTime=#{buildTime}
+		where childId=#{childId}
+	  </if> 
+</update> 
+
+
+</mapper>

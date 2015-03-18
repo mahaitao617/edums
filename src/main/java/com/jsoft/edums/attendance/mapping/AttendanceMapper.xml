@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsoft.edums.attendance.mapper.AttendanceMapper">
+	
+	<resultMap type="AttendanceRecords" id="AttendanceRecords">
+		<id column="ARId" property="ARId"/>
+		<result column="stu_id" property="stu_id"/>
+		<result column="timetable_id" property="timetable_id"/>
+		<result column="ARState" property="ARState"/>
+		<result column="leaveReason" property="leaveReason"/>
+		<result column="isDelete" property="isDelete"/>
+		
+		<association property="timetable" select="selectTimeTable" column="timetable_id" javaType="Timetable"  />
+		
+		<association property="stuinfo" select="selectStu" column="stu_id" javaType="Stuinfo"  >
+		</association>
+		
+		
+
+	</resultMap>
+	<resultMap type="Diction" id="Diction">
+		<id column="dictionId" property="dictionId"/>
+		<result column="childId" property="childId"/>
+		<result column="fatherId" property="fatherId"/>
+		<result column="dictionName" property="dictionName"/>
+		<result column="describle" property="describle"/>
+		<result column="buildTime" property="buildTime"/>
+		<result column="isDelete" property="isDelete"/>
+	</resultMap>
+	
+	<select id="selectStu" parameterType="int" resultType="Stuinfo">
+		select * from stuinfo where isDelete=0  and stuInfoId=#{stu_id} 
+	</select>
+	<select id="selectTimeTable" parameterType="int" resultType="com.jsoft.edums.coursemnt.entity.Timetable">
+		select * from timetable where isDelete=0  and timeTableId=#{timetable_id} 
+	</select>
+
+
+	<select id="listPageAttendanceAll" parameterType="Page" resultMap="AttendanceRecords">
+		select * from attendancerecords where isDelete=0
+	</select>
+	
+	<select id="listPageRequiredAttendance" parameterType="Map" resultMap="AttendanceRecords">
+		select * from attendancerecords where isDelete=0 and stuNo=#{requiredInfo} 
+
+
+	</select>
+
+
+	<select id="findSingle" parameterType="Integer" resultMap="AttendanceRecords">
+		select * from attendancerecords where isDelete=0 and ARId=#{ARId}
+	</select>
+	<select id="findARStates" resultMap="Diction">
+		select * from diction where isDelete=0 and fatherId=1020
+	</select>
+	<select id="setARState" parameterType="String" resultMap="Diction">
+		select * from diction where isDelete=0 and dictionName=#{ARState}
+	</select>
+	<update id="updateAttendanceById" parameterType="AttendanceRecords">
+		update attendancerecords set ARState=#{ARState},leaveReason=#{leaveReason} where ARId=#{ARId}
+	</update>
+
+	<insert id="insertAttendance" useGeneratedKeys="true" parameterType="java.util.List">
+	<selectKey resultType="long" keyProperty="ARId" order="AFTER">
+		SELECT
+		LAST_INSERT_ID()
+	</selectKey>
+	insert into AttendanceRecords(stu_id,timetable_id,ARState,leaveReason,isDelete) 
+	values
+	<foreach collection="list" item="item" index="index" separator="," >
+		(#{item.stu_id},#{item.timetable_id},#{item.ARState},#{item.leaveReason},0)
+	</foreach>
+</insert>
+	
+</mapper>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsoft.edums.coursemnt.mapper.TimetableMapper">
+	<resultMap type="Timetable" id="timetableResult">
+		<id column="timeTableId" property="timeTableId"/>
+		<result column="classes_id" property="classes_id"/>
+		<result column="course_id" property="course_id"/>
+		<result column="tea_id" property="tea_id"/>
+		<result column="campus" property="campus"/>
+		<result column="classroom" property="classroom"/>
+		<result column="date" property="date"/>
+		<result column="time" property="time"/>
+		<result column="buildTime" property="buildTime"/>
+		<result column="buildUserId" property="buildUserId"/>
+		<result column="updateTime" property="updateTime"/>
+		<result column="remark" property="remark"/>
+		<result column="isDelete" property="isDelete"/>
+		<association property="classes" column="classes_id" javaType="com.jsoft.edums.classmnt.entity.Classes" select="selectClasses">
+			<!-- 	<id column="classesId" property="classesId"></id>
+				<result column="classesNo" property="classesNo"/> -->
+		</association>
+		<association property="courseInfo" column="course_id" javaType="com.jsoft.edums.coursemnt.entity.CourseInfo" select="selectCourseInfo">
+				<!-- <id column="courseId" property="courseId"></id>
+				<result column="courseName" property="courseName"/> -->
+		</association>
+		<association property="teacher" column="tea_id" javaType="com.jsoft.edums.teamnt.entity.Teacher" select="selectTeacher">
+				<!-- <id column="teaId" property="teaId"></id>
+				<result column="teaName" property="teaName"/> -->
+		</association>
+	</resultMap>
+	<select id="queryByTime" parameterType="Map" resultMap="timetableResult">
+		select * from timetable where date between #{Fdate} and #{Ldate} and isDelete=0
+	</select>
+	<select id="queryByTimeAndCampus" parameterType="Map" resultMap="timetableResult">
+		select * from timetable where date between #{Fdate} and #{Ldate} and isDelete=0 and campus=#{campus}
+	</select>
+	<select id="selectClasses" parameterType="int" resultType="com.jsoft.edums.classmnt.entity.Classes">
+		select * from classes where isDelete=0  and classesId=#{classes_id} 
+	</select>
+	<select id="selectCourseInfo" parameterType="int" resultType="com.jsoft.edums.coursemnt.entity.CourseInfo">
+		select * from courseinfo where isDelete=0  and courseId=#{course_id} 
+	</select>
+	<select id="selectTeacher" parameterType="int" resultType="com.jsoft.edums.teamnt.entity.Teacher">
+		select * from teacher where isDelete=0  and teaId=#{tea_id} 
+	</select>
+	
+
+	<select id="queryByTimetable" parameterType="Timetable" resultMap="timetableResult">
+		select * from timetable where isDelete=0 
+		<if test="timeTableId!=null">
+		and timeTableId=#{timeTableId}
+		</if>
+		<if test="classes_id!=null">
+		and classes_id=#{classes_id}
+		</if>
+		<if test="course_id!=null">
+		and course_id=#{course_id}
+		</if>
+		<if test="tea_id!=null">
+		and tea_id=#{tea_id}
+		</if>
+		<if test="campus!=null">
+		and campus=#{campus}
+		</if>
+		<if test="classroom!=null">
+		and classroom=#{classroom}
+		</if>
+		<if test="date!=null">
+		and date=#{date}
+		</if>
+		<if test="time!=null">
+		and time=#{time}
+		</if>
+		<if test="buildUserId!=null">
+		and buildUserId=#{buildUserId}
+		</if>
+	</select>
+	
+	
+	<insert id="insertTimetable" parameterType="Timetable" useGeneratedKeys="true" keyProperty="timeTableId">
+		insert into timetable(classes_id,tea_id,campus,classroom,date,time,buildTime,buildUserId,remark,isDelete)
+		values(#{classes_id},#{tea_id},#{campus},#{classroom},#{date},#{time},#{buildTime},#{buildUserId},#{remark},0)
+	</insert>
+	<update id="updateTimetable" parameterType="Timetable">
+		update timetable set 
+		<if test="isDelete==0||isDelete==null||isDelete==''">
+		classes_id=#{classes_id},
+		tea_id=#{tea_id},
+		campus=#{campus},
+		classroom=#{classroom},
+		date=#{date},
+		time=#{time},
+		updateTime=#{updateTime},
+		remark=#{remark} 
+		</if>
+		<if test="isDelete==1">
+		isDelete=1
+		</if>
+		where timeTableId=#{timeTableId}
+	</update>
+</mapper>
